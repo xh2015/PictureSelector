@@ -55,6 +55,7 @@
 * 23.新增Luban压缩档次设置
 * 24.新增圆形头像裁剪
 * 25.新增音频功能查询
+* 26.新增水印功能（需要开启压缩图片功能,demo里只是写在了fragment里面）
 
 
 重要的事情说三遍记得添加权限
@@ -189,6 +190,7 @@ Glide.with(context).load(url).apply(options).into(imageView);
 	.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径,可不填
  	.enableCrop()// 是否裁剪 true or false
  	.compress()// 是否压缩 true or false
+	.waterMark("水印文本");//水印文本
  	.glideOverride()// int glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
  	.withAspectRatio()// int 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
  	.hideBottomControls()// 是否显示uCrop工具栏，默认不显示 true or false
