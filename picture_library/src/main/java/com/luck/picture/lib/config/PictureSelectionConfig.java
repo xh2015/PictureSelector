@@ -24,6 +24,7 @@ public final class PictureSelectionConfig implements Parcelable {
     public boolean camera;
     public String outputCameraPath;
     public String compressSavePath;
+    public String waterMark;
     public String suffixType;
     @StyleRes
     public int themeStyleId;
@@ -109,6 +110,7 @@ public final class PictureSelectionConfig implements Parcelable {
         isDragFrame = true;
         outputCameraPath = "";
         compressSavePath = "";
+        waterMark = "";
         suffixType = PictureFileUtils.POSTFIX;
         sizeMultiplier = 0.5f;
         selectionMedias = new ArrayList<>();
@@ -139,6 +141,7 @@ public final class PictureSelectionConfig implements Parcelable {
         dest.writeByte(this.camera ? (byte) 1 : (byte) 0);
         dest.writeString(this.outputCameraPath);
         dest.writeString(this.compressSavePath);
+        dest.writeString(this.waterMark);
         dest.writeString(this.suffixType);
         dest.writeInt(this.themeStyleId);
         dest.writeInt(this.selectionMode);
@@ -189,6 +192,7 @@ public final class PictureSelectionConfig implements Parcelable {
         this.camera = in.readByte() != 0;
         this.outputCameraPath = in.readString();
         this.compressSavePath = in.readString();
+        this.waterMark = in.readString();
         this.suffixType = in.readString();
         this.themeStyleId = in.readInt();
         this.selectionMode = in.readInt();

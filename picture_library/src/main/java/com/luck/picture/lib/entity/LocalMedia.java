@@ -25,6 +25,7 @@ public class LocalMedia implements Parcelable {
     private int mimeType;
     private String pictureType;
     private boolean compressed;
+    private boolean waterMark;
     private int width;
     private int height;
 
@@ -63,6 +64,14 @@ public class LocalMedia implements Parcelable {
             pictureType = "image/jpeg";
         }
         return pictureType;
+    }
+
+    public boolean isWaterMark() {
+        return waterMark;
+    }
+
+    public void setWaterMark(boolean waterMark) {
+        this.waterMark = waterMark;
     }
 
     public void setPictureType(String pictureType) {
@@ -184,6 +193,7 @@ public class LocalMedia implements Parcelable {
         dest.writeInt(this.mimeType);
         dest.writeString(this.pictureType);
         dest.writeByte(this.compressed ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.waterMark ? (byte) 1 : (byte) 0);
         dest.writeInt(this.width);
         dest.writeInt(this.height);
     }
@@ -200,6 +210,7 @@ public class LocalMedia implements Parcelable {
         this.mimeType = in.readInt();
         this.pictureType = in.readString();
         this.compressed = in.readByte() != 0;
+        this.waterMark = in.readByte() != 0;
         this.width = in.readInt();
         this.height = in.readInt();
     }

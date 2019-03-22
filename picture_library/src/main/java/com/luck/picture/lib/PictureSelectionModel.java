@@ -307,6 +307,15 @@ public class PictureSelectionModel {
     }
 
     /**
+     * @param waterMark 水印
+     * @return
+     */
+    public PictureSelectionModel waterMark(String waterMark) {
+        selectionConfig.waterMark = waterMark;
+        return this;
+    }
+
+    /**
      * @param zoomAnim Picture list zoom anim
      * @return
      */

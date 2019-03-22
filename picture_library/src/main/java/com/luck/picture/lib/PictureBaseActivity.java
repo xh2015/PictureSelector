@@ -28,6 +28,7 @@ import com.luck.picture.lib.rxbus2.RxBus;
 import com.luck.picture.lib.tools.AttrsUtils;
 import com.luck.picture.lib.tools.DateUtils;
 import com.luck.picture.lib.tools.DoubleUtils;
+import com.luck.picture.lib.tools.ImageUtils;
 import com.luck.picture.lib.tools.PictureFileUtils;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropMulti;
@@ -199,12 +200,53 @@ public class PictureBaseActivity extends FragmentActivity {
         }
     }
 
+    /**
+     * waterMark
+     */
+    protected void waterMark(final List<LocalMedia> result) {
+        //压缩图片之前看看是否需要添加水印
+        config.waterMark = "测试数据";
+        if (!TextUtils.isEmpty(config.waterMark) && result != null && result.size() > 0) {
+            //需要先增加水印
+            Flowable.just(result)
+                    .observeOn(Schedulers.io())
+                    .map(new Function<List<LocalMedia>, List<LocalMedia>>() {
+                        @Override
+                        public List<LocalMedia> apply(@NonNull List<LocalMedia> list) throws Exception {
+                            for (LocalMedia localMedia : result) {
+                                if(!localMedia.isWaterMark()){
+                                    File file = new File(localMedia.getPath());
+                                    boolean watermark = ImageUtils.addTextWatermark(file, config.waterMark);
+                                    localMedia.setWaterMark(watermark);
+                                }
+                            }
+                            return list;
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<List<LocalMedia>>() {
+                        @Override
+                        public void accept(@NonNull List<LocalMedia> files) throws Exception {
+                            compressImageAfterWaterMark(result);
+                        }
+                    });
+        } else {
+            compressImageAfterWaterMark(result);
+        }
+    }
 
     /**
      * compressImage
      */
     protected void compressImage(final List<LocalMedia> result) {
         showCompressDialog();
+        waterMark(result);
+    }
+
+    /**
+     * compressImage
+     */
+    protected void compressImageAfterWaterMark(final List<LocalMedia> result) {
         if (config.synOrAsy) {
             Flowable.just(result)
                     .observeOn(Schedulers.io())
@@ -473,7 +515,7 @@ public class PictureBaseActivity extends FragmentActivity {
             String selection = eqVideo ? MediaStore.Video.Media.DATA + " like ?" :
                     MediaStore.Images.Media.DATA + " like ?";
             //定义selectionArgs：
-            String[] selectionArgs = {absolutePath + "%"};
+            String[] selectionArgs = { absolutePath + "%" };
             Cursor imageCursor = this.getContentResolver().query(eqVideo ?
                             MediaStore.Video.Media.EXTERNAL_CONTENT_URI
                             : MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null,
@@ -513,7 +555,7 @@ public class PictureBaseActivity extends FragmentActivity {
                     : MediaStore.Images.Media._ID + "=?";
             cr.delete(uri,
                     selection,
-                    new String[]{Long.toString(id)});
+                    new String[]{ Long.toString(id) });
         } catch (Exception e) {
             e.printStackTrace();
         }

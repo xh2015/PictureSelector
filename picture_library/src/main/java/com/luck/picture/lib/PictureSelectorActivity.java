@@ -516,6 +516,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
                 }
             } else if (config.isCompress && eqImg) {
                 // 图片才压缩，视频不管
+                //
                 compressImage(images);
             } else {
                 onResult(images);
