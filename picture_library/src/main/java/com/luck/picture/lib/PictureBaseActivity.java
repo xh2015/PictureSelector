@@ -205,7 +205,6 @@ public class PictureBaseActivity extends FragmentActivity {
      */
     protected void waterMark(final List<LocalMedia> result) {
         //压缩图片之前看看是否需要添加水印
-        config.waterMark = "测试数据";
         if (!TextUtils.isEmpty(config.waterMark) && result != null && result.size() > 0) {
             //需要先增加水印
             Flowable.just(result)

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ public class PhotoFragment extends Fragment implements View.OnClickListener,
     private GridImageAdapter adapter;
     private int maxSelectNum = 9;
     private TextView tv_select_num;
+    private EditText et_water_mark;
     private ImageView left_back, minus, plus;
     private RadioGroup rgb_crop, rgb_style, rgb_photo_mode;
     private int aspect_ratio_x, aspect_ratio_y;
@@ -68,6 +70,7 @@ public class PhotoFragment extends Fragment implements View.OnClickListener,
         minus = (ImageView) rootView.findViewById(R.id.minus);
         plus = (ImageView) rootView.findViewById(R.id.plus);
         tv_select_num = (TextView) rootView.findViewById(R.id.tv_select_num);
+        et_water_mark = (EditText) rootView.findViewById(R.id.et_water_mark);
         rgb_crop = (RadioGroup) rootView.findViewById(R.id.rgb_crop);
         rgb_style = (RadioGroup) rootView.findViewById(R.id.rgb_style);
         rgb_photo_mode = (RadioGroup) rootView.findViewById(R.id.rgb_photo_mode);
@@ -145,6 +148,7 @@ public class PhotoFragment extends Fragment implements View.OnClickListener,
                         .isCamera(cb_isCamera.isChecked())
                         .enableCrop(cb_crop.isChecked())
                         .compress(cb_compress.isChecked())
+                        .waterMark(et_water_mark.getText().toString())
                         .glideOverride(160, 160)
                         .previewEggs(true)
                         .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
@@ -172,6 +176,7 @@ public class PhotoFragment extends Fragment implements View.OnClickListener,
                         .enableCrop(cb_crop.isChecked())
                         .compress(cb_compress.isChecked())
                         .glideOverride(160, 160)
+                        .waterMark(et_water_mark.getText().toString())
                         .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
                         .hideBottomControls(cb_hide.isChecked() ? false : true)
                         .isGif(cb_isGif.isChecked())

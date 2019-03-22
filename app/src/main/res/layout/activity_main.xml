@@ -68,6 +68,14 @@
 
             <include layout="@layout/layout_number" />
 
+            <EditText
+                android:id="@+id/et_water_mark"
+                android:hint="请输入水印文本"
+                android:padding="4dp"
+                android:layout_margin="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <RadioGroup
                 android:id="@+id/rgb_style"
                 android:layout_width="match_parent"
