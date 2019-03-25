@@ -5,8 +5,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.text.Layout;
+import android.text.StaticLayout;
 import android.text.TextPaint;
 
 import java.io.BufferedOutputStream;
@@ -60,18 +61,24 @@ public class ImageUtils {
                                           final boolean recycle) {
         if (isEmptyBitmap(src) || content == null) return null;
         Bitmap ret = src.copy(src.getConfig(), true);
-        // 新建一个文字画笔
+        //获取图片宽和高
+        int height = ret.getHeight();
         int textSize = ret.getWidth() / 20;
+        //新建一个Bitmap，加水印后的图片写入到新Bitmap中
+        Canvas canvas = new Canvas(ret);
+        // 新建一个文字画笔
         TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG);
         textPaint.setTextSize(textSize);
         textPaint.setTypeface(Typeface.DEFAULT_BOLD);
         textPaint.setColor(Color.RED);
+        textPaint.setAntiAlias(true);
 
-        Rect bounds = new Rect();
-        textPaint.getTextBounds(content, 0, content.length(), bounds);
-        Canvas canvas = new Canvas(ret);
-        int height = ret.getHeight();
-        canvas.drawText(content, 20, height - textSize - 20, textPaint);
+        StaticLayout layout = new StaticLayout(content, textPaint, canvas.getWidth() - 20,
+                Layout.Alignment.ALIGN_NORMAL, 1.0F, 0.0F, true);
+        canvas.save();
+        canvas.translate(20, height - layout.getHeight() - 20);
+        layout.draw(canvas);
+        canvas.restore();//别忘了restore
         if (recycle && !src.isRecycled() && ret != src) src.recycle();
         return ret;
     }
