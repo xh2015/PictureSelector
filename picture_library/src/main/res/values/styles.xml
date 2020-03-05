@@ -25,6 +25,14 @@
         <item name="colorAccent">@color/bar_grey</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="AppThemeTransparent" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:background">@color/transparent</item>
+        <item name="android:windowIsTranslucent">@color/transparent</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
     <style name="picture_alert_dialog" parent="android:Theme.Dialog">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">false</item>
