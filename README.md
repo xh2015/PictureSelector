@@ -74,7 +74,7 @@
 
 ```
 dependencies {
-    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
+    implementation 'com.github.xh2015.PictureSelector:picture_library:2.2.7'//有水印版本
 }
 
 ```
