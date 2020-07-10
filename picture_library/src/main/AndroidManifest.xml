@@ -15,23 +15,17 @@
         </provider>
         <activity
             android:name=".PictureSelectorActivity"
-            android:theme="@android:style/Theme.Light"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".PicturePreviewActivity"
-                  android:theme="@android:style/Theme.Light"/>
+        <activity android:name=".PicturePreviewActivity"/>
         <activity
             android:name=".PictureVideoPlayActivity"
-            android:theme="@android:style/Theme.Light"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensor" />
-        <activity android:name=".PictureExternalPreviewActivity"
-                  android:theme="@android:style/Theme.Light"/>
+        <activity android:name=".PictureExternalPreviewActivity"/>
         <activity android:name="com.yalantis.ucrop.UCropActivity"
-                  android:theme="@android:style/Theme.Light"/>
-        <activity android:name="com.yalantis.ucrop.PictureMultiCuttingActivity"
-                  android:theme="@android:style/Theme.Light"/>
-        <activity android:name=".PicturePlayAudioActivity"
-                  android:theme="@android:style/Theme.Light"/>
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name="com.yalantis.ucrop.PictureMultiCuttingActivity"/>
+        <activity android:name=".PicturePlayAudioActivity"/>
 
 
     </application>
