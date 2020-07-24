@@ -7,12 +7,10 @@ import android.support.annotation.IntRange;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
-import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.DoubleUtils;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -419,6 +417,9 @@ public class PictureSelectionModel {
                 return;
             }
             Intent intent = new Intent(activity, PictureSelectorActivity.class);
+            if (selectionConfig.camera) {
+                intent = new Intent(activity, MyTransparentActivity.class);
+            }
             Fragment fragment = selector.getFragment();
             if (fragment != null) {
                 fragment.startActivityForResult(intent, requestCode);

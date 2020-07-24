@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.luck.picture.lib">
+<manifest package="com.luck.picture.lib"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application android:theme="@style/AppTheme">
 
@@ -11,21 +11,26 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"/>
         </provider>
+
         <activity
             android:name=".PictureSelectorActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".PicturePreviewActivity"/>
         <activity
             android:name=".PictureVideoPlayActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensor" />
+            android:screenOrientation="sensor"/>
         <activity android:name=".PictureExternalPreviewActivity"/>
-        <activity android:name="com.yalantis.ucrop.UCropActivity"
-                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.yalantis.ucrop.PictureMultiCuttingActivity"/>
         <activity android:name=".PicturePlayAudioActivity"/>
+        <activity
+            android:name=".MyTransparentActivity"
+            android:theme="@style/transparent_activity"/>
 
 
     </application>
