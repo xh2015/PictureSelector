@@ -21,7 +21,8 @@
         <activity
             android:name=".PictureVideoPlayActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensor"/>
+            android:screenOrientation="sensor"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
         <activity android:name=".PictureExternalPreviewActivity"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
