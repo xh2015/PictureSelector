@@ -14,6 +14,8 @@ import android.text.TextUtils;
  */
 
 public class LocalMedia implements Parcelable {
+    private String src;
+    private long id;
     private String path;
     private String compressPath;
     private String cutPath;
@@ -173,6 +175,22 @@ public class LocalMedia implements Parcelable {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public String getSrc() {
+        return src;
+    }
+
+    public void setSrc(String src) {
+        this.src = src;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override
