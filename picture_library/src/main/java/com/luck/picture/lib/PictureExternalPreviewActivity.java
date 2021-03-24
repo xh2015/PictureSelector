@@ -4,6 +4,8 @@ import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -65,6 +68,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
     private ImageButton left_back;
     private TextView tv_title;
     private PreviewViewPager viewPager;
+    private ImageView mDownloadIv;
     private List<LocalMedia> images = new ArrayList<>();
     private int position = 0;
     private String directory_path;
@@ -72,6 +76,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
     private LayoutInflater inflater;
     private RxPermissions rxPermissions;
     private loadDataThread loadDataThread;
+    private int currentIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,15 +86,91 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
         tv_title = (TextView) findViewById(R.id.picture_title);
         left_back = (ImageButton) findViewById(R.id.left_back);
         viewPager = (PreviewViewPager) findViewById(R.id.preview_pager);
+        mDownloadIv = (ImageView) findViewById(R.id.download_iv);
         position = getIntent().getIntExtra(PictureConfig.EXTRA_POSITION, 0);
         directory_path = getIntent().getStringExtra(PictureConfig.DIRECTORY_PATH);
         images = (List<LocalMedia>) getIntent().getSerializableExtra(PictureConfig.EXTRA_PREVIEW_SELECT_LIST);
         left_back.setOnClickListener(this);
         initViewPageAdapterData();
+        mDownloadIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LocalMedia media = images.get(position);
+                if (media != null) {
+                    final String pictureType = media.getPictureType();
+                    final String path;
+                    if (media.isCut() && !media.isCompressed()) {
+                        // 裁剪过
+                        path = media.getCutPath();
+                    } else if (media.isCompressed() || (media.isCut() && media.isCompressed())) {
+                        // 压缩过,或者裁剪同时压缩过,以最终压缩过图片为准
+                        path = media.getCompressPath();
+                    } else {
+                        path = media.getPath();
+                    }
+
+                    if (rxPermissions == null) {
+                        rxPermissions = new RxPermissions(PictureExternalPreviewActivity.this);
+                    }
+                    rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            .subscribe(new Observer<Boolean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+                                }
+
+                                @Override
+                                public void onNext(Boolean aBoolean) {
+                                    if (aBoolean) {
+                                        boolean isHttp = PictureMimeType.isHttp(path);
+                                        if (isHttp) {
+                                            loadDataThread = new loadDataThread(path);
+                                            loadDataThread.start();
+                                        } else {
+                                            // 有可能本地图片
+                                            try {
+                                                String dirPath = PictureFileUtils.createDir(PictureExternalPreviewActivity.this,
+                                                        System.currentTimeMillis() + ".png", directory_path);
+                                                PictureFileUtils.copyFile(path, dirPath);
+                                                MediaScannerConnection.scanFile(PictureExternalPreviewActivity.this,
+                                                        new String[]{ dirPath },
+                                                        new String[]{ "image/jpeg" },
+                                                        new MediaScannerConnection.OnScanCompletedListener() {
+                                                            @Override
+                                                            public void onScanCompleted(String path, Uri uri) {
+                                                                Message message = handler.obtainMessage();
+                                                                message.what = 200;
+                                                                message.obj = path;
+                                                                handler.sendMessage(message);
+                                                            }
+                                                        });
+                                                dismissDialog();
+                                            } catch (IOException e) {
+                                                ToastManage.s(mContext, getString(R.string.picture_save_error) + "\n" + e.getMessage());
+                                                dismissDialog();
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    } else {
+                                        ToastManage.s(mContext, getString(R.string.picture_jurisdiction));
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                }
+
+                                @Override
+                                public void onComplete() {
+                                }
+                            });
+                }
+            }
+        });
     }
 
     private void initViewPageAdapterData() {
         tv_title.setText(position + 1 + "/" + images.size());
+        currentIndex = position;
         adapter = new SimpleFragmentAdapter();
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(position);
@@ -102,6 +183,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
             @Override
             public void onPageSelected(int position) {
                 tv_title.setText(position + 1 + "/" + images.size());
+                currentIndex = position;
             }
 
             @Override
@@ -317,7 +399,18 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                         String dirPath = PictureFileUtils.createDir(PictureExternalPreviewActivity.this,
                                 System.currentTimeMillis() + ".png", directory_path);
                         PictureFileUtils.copyFile(path, dirPath);
-                        ToastManage.s(mContext, getString(R.string.picture_save_success) + "\n" + dirPath);
+                        MediaScannerConnection.scanFile(PictureExternalPreviewActivity.this,
+                                new String[]{ dirPath },
+                                new String[]{ "image/jpeg" },
+                                new MediaScannerConnection.OnScanCompletedListener() {
+                                    @Override
+                                    public void onScanCompleted(String path, Uri uri) {
+                                        Message message = handler.obtainMessage();
+                                        message.what = 200;
+                                        message.obj = path;
+                                        handler.sendMessage(message);
+                                    }
+                                });
                         dismissDialog();
                     } catch (IOException e) {
                         ToastManage.s(mContext, getString(R.string.picture_save_error) + "\n" + e.getMessage());
@@ -372,10 +465,18 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
             }
             bout.flush();
             bout.close();
-            Message message = handler.obtainMessage();
-            message.what = 200;
-            message.obj = path;
-            handler.sendMessage(message);
+            MediaScannerConnection.scanFile(PictureExternalPreviewActivity.this,
+                    new String[]{ path },
+                    new String[]{ "image/jpeg" },
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            Message message = handler.obtainMessage();
+                            message.what = 200;
+                            message.obj = path;
+                            handler.sendMessage(message);
+                        }
+                    });
         } catch (IOException e) {
             ToastManage.s(mContext, getString(R.string.picture_save_error) + "\n" + e.getMessage());
             e.printStackTrace();
