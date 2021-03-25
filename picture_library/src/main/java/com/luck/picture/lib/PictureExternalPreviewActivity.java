@@ -145,7 +145,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                                                         });
                                                 dismissDialog();
                                             } catch (IOException e) {
-                                                ToastManage.s(mContext, getString(R.string.picture_save_error) + "\n" + e.getMessage());
+                                                ToastManage.s(mContext, getString(R.string.picture_save_error));
                                                 dismissDialog();
                                                 e.printStackTrace();
                                             }
@@ -413,7 +413,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                                 });
                         dismissDialog();
                     } catch (IOException e) {
-                        ToastManage.s(mContext, getString(R.string.picture_save_error) + "\n" + e.getMessage());
+                        ToastManage.s(mContext, getString(R.string.picture_save_error));
                         dismissDialog();
                         e.printStackTrace();
                     }
@@ -478,7 +478,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                         }
                     });
         } catch (IOException e) {
-            ToastManage.s(mContext, getString(R.string.picture_save_error) + "\n" + e.getMessage());
+            ToastManage.s(mContext, getString(R.string.picture_save_error));
             e.printStackTrace();
         }
     }
@@ -491,7 +491,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
             switch (msg.what) {
                 case 200:
                     String path = (String) msg.obj;
-                    ToastManage.s(mContext, getString(R.string.picture_save_success) + "\n" + path);
+                    ToastManage.s(mContext, getString(R.string.picture_save_success));
                     dismissDialog();
                     break;
             }

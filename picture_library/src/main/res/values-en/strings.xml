@@ -28,7 +28,7 @@
     <string name="picture_prompt">Prompt</string>
     <string name="picture_prompt_content">Do you want to save pictures to your phone?</string>
     <string name="picture_save_error">Picture save failed</string>
-    <string name="picture_save_success">Save picture successfully until</string>
+    <string name="picture_save_success">Save picture successfully</string>
     <string name="picture_all_audio">All audio</string>
     <string name="picture_tape">Tape</string>
     <string name="picture_play_audio">Play</string>
